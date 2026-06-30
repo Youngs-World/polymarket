@@ -79,12 +79,10 @@ export function Sparkline({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, ease: ease.out }}
         />
-        {/* pathLength=1 normalizes the dash space, so the CSS draw-in runs once on
-            mount and the full line stays rendered no matter how the data ticks. */}
+        {/* Plain solid stroke — always fully rendered. (A stroke-dash draw-in
+            breaks on live `d` updates, so we reveal via the area fade instead.) */}
         <path
-          className="mp-spark-line"
           d={line}
-          pathLength={1}
           fill="none"
           stroke={color}
           strokeWidth={2.25}
