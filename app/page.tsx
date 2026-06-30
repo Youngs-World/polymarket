@@ -92,6 +92,21 @@ export default function Page() {
           . Data is simulated.
         </span>
       </footer>
+
+      <div style={{ textAlign: "center", fontSize: 12, color: "var(--text-dim)", padding: "14px 0 4px" }}>
+        More work —{" "}
+        <a href="https://apps.apple.com/us/app/sip-drinks-abroad/id6781859543" target="_blank" rel="noreferrer" style={{ color: "var(--text-muted)", fontWeight: 600 }}>
+          Sip ↗
+        </a>
+        <span style={{ margin: "0 8px", opacity: 0.5 }}>·</span>
+        <a href="https://firecodeai.com/" target="_blank" rel="noreferrer" style={{ color: "var(--text-muted)", fontWeight: 600 }}>
+          FireCode AI ↗
+        </a>
+        <span style={{ margin: "0 8px", opacity: 0.5 }}>·</span>
+        <a href="https://github.com/Youngs-World" target="_blank" rel="noreferrer" style={{ color: "var(--text-muted)", fontWeight: 600 }}>
+          GitHub ↗
+        </a>
+      </div>
     </main>
   );
 }
