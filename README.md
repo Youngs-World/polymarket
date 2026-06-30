@@ -4,7 +4,7 @@ An interaction & motion study for **prediction-market** interfaces — built to 
 
 ![Market Pulse demo](docs/demo.gif)
 
-**Live demo:** _add your deploy URL here_ · **Stack:** React · Next.js (App Router) · TypeScript · Framer Motion
+**Live demo:** [polymarket-resume.pages.dev](https://polymarket-resume.pages.dev) · **Stack:** React · Next.js (App Router) · TypeScript · Framer Motion
 
 ---
 
