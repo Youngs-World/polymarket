@@ -4,12 +4,27 @@ import { useId } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ease } from "@/lib/motion";
 
-/**
- * Lightweight SVG sparkline. The line draws itself in on mount (pathLength)
- * and the area fades up beneath it. The live "pulse" dot is an HTML overlay
- * positioned by percentage so it stays a perfect circle even though the SVG
- * is stretched to full width (vector-effect keeps the stroke crisp too).
- */
+type Pt = readonly [number, number];
+
+/** Catmull-Rom → cubic bézier: a smooth curve through every point, no overshoot
+ *  worth worrying about for 0–1 data. Much prettier than a jagged polyline. */
+function smooth(pts: Pt[]): string {
+  if (pts.length < 2) return pts.length ? `M${pts[0][0]} ${pts[0][1]}` : "";
+  const d = [`M${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] || p2;
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d.push(`C${c1x.toFixed(2)} ${c1y.toFixed(2)} ${c2x.toFixed(2)} ${c2y.toFixed(2)} ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}`);
+  }
+  return d.join(" ");
+}
+
 export function Sparkline({
   data,
   color,
@@ -22,18 +37,18 @@ export function Sparkline({
   const reduce = useReducedMotion();
   const gid = useId().replace(/:/g, "");
   const w = 320;
-  const pad = 5;
+  const pad = 6;
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
 
-  const pts = data.map((v, i) => {
+  const pts: Pt[] = data.map((v, i) => {
     const x = pad + (i / (data.length - 1)) * (w - 2 * pad);
     const y = pad + (1 - (v - min) / range) * (height - 2 * pad);
     return [x, y] as const;
   });
 
-  const line = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join(" ");
+  const line = smooth(pts);
   const area = `${line} L${pts[pts.length - 1][0].toFixed(2)} ${height} L${pts[0][0].toFixed(2)} ${height} Z`;
   const last = pts[pts.length - 1];
   const dotLeft = (last[0] / w) * 100;
@@ -51,7 +66,8 @@ export function Sparkline({
       >
         <defs>
           <linearGradient id={`fill-${gid}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity={0.3} />
+            <stop offset="0%" stopColor={color} stopOpacity={0.32} />
+            <stop offset="70%" stopColor={color} stopOpacity={0.06} />
             <stop offset="100%" stopColor={color} stopOpacity={0} />
           </linearGradient>
         </defs>
@@ -63,17 +79,19 @@ export function Sparkline({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, ease: ease.out }}
         />
-        <motion.path
+        {/* pathLength=1 normalizes the dash space, so the CSS draw-in runs once on
+            mount and the full line stays rendered no matter how the data ticks. */}
+        <path
+          className="mp-spark-line"
           d={line}
+          pathLength={1}
           fill="none"
           stroke={color}
-          strokeWidth={2}
+          strokeWidth={2.25}
           strokeLinecap="round"
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
-          initial={reduce ? false : { pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.9, ease: ease.out }}
+          style={{ filter: `drop-shadow(0 0 5px ${color})`, opacity: 0.95 }}
         />
       </svg>
 
@@ -89,7 +107,7 @@ export function Sparkline({
       >
         {!reduce && (
           <motion.span
-            animate={{ scale: [1, 2.6, 1], opacity: [0.45, 0, 0.45] }}
+            animate={{ scale: [1, 2.8, 1], opacity: [0.5, 0, 0.5] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
             style={{
               position: "absolute",
@@ -108,7 +126,7 @@ export function Sparkline({
             height: 7,
             borderRadius: "var(--r-pill)",
             background: color,
-            boxShadow: `0 0 0 3px var(--surface)`,
+            boxShadow: `0 0 0 3px var(--surface), 0 0 10px ${color}`,
           }}
         />
       </div>

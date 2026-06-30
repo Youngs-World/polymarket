@@ -148,6 +148,18 @@ a {
   }
 }
 
+/* Sparkline draw-in. pathLength=1 normalizes the dash space, so this runs once
+   on mount and the full line stays put as the data ticks (no stale-dash gap). */
+@keyframes mp-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.mp-spark-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: mp-draw 1s var(--ease-out) forwards;
+}
+
 /* Respect users who don't want motion — disable transitions/animations.
    (Components also branch on useReducedMotion for spring-driven values.) */
 @media (prefers-reduced-motion: reduce) {

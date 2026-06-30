@@ -22,14 +22,14 @@ export function BuyButtons({ prob }: { prob: number }) {
   return (
     <div style={{ display: "flex", gap: 10 }}>
       <motion.button
-        whileHover={{ y: -2 }}
+        whileHover={{ y: -2, boxShadow: "0 14px 30px -14px var(--yes)" }}
         whileTap={{ scale: 0.97 }}
         transition={spring.snappy}
         style={{
           ...base,
           color: "var(--yes)",
           background: "var(--yes-soft)",
-          border: "1px solid color-mix(in srgb, var(--yes) 45%, transparent)",
+          border: "1px solid color-mix(in srgb, var(--yes) 50%, transparent)",
         }}
       >
         <span>Buy Yes</span>
@@ -37,14 +37,14 @@ export function BuyButtons({ prob }: { prob: number }) {
       </motion.button>
 
       <motion.button
-        whileHover={{ y: -2 }}
+        whileHover={{ y: -2, boxShadow: "0 14px 30px -14px var(--no)" }}
         whileTap={{ scale: 0.97 }}
         transition={spring.snappy}
         style={{
           ...base,
           color: "var(--no)",
           background: "var(--no-soft)",
-          border: "1px solid color-mix(in srgb, var(--no) 45%, transparent)",
+          border: "1px solid color-mix(in srgb, var(--no) 50%, transparent)",
         }}
       >
         <span>Buy No</span>

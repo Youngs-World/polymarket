@@ -37,14 +37,24 @@ export function MarketCard({ market, featured = false }: { market: Market; featu
         hidden: { opacity: 0, y: 18, scale: 0.985 },
         show: { opacity: 1, y: 0, scale: 1, transition: spring.settle },
       }}
-      whileHover={{ y: -4 }}
+      whileHover={{
+        y: -4,
+        boxShadow: featured
+          ? "0 34px 80px -34px rgba(0,0,0,0.92), inset 0 1px 0 rgba(255,255,255,0.06)"
+          : "0 22px 50px -26px rgba(0,0,0,0.8)",
+      }}
       transition={spring.snappy}
       style={{
-        background: "var(--surface)",
-        border: "1px solid var(--border)",
+        position: "relative",
+        background: featured
+          ? "radial-gradient(135% 95% at 100% 0%, var(--accent-soft), transparent 55%), linear-gradient(180deg, var(--surface-2), var(--surface))"
+          : "var(--surface)",
+        border: featured ? "1px solid var(--border-strong)" : "1px solid var(--border)",
         borderRadius: "var(--r-lg)",
         padding: featured ? 24 : 18,
-        boxShadow: "var(--shadow-card)",
+        boxShadow: featured
+          ? "var(--shadow-card), inset 0 1px 0 rgba(255,255,255,0.05)"
+          : "var(--shadow-card)",
         display: "flex",
         flexDirection: "column",
         gap: featured ? 18 : 13,
