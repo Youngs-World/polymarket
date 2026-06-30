@@ -1,0 +1,162 @@
+/* ============================================================
+   Market Pulse — design tokens
+   A single source of truth for color, elevation, and rhythm.
+   Themes switch by toggling [data-theme] on <html>; every
+   component reads only from these variables (design-tokens →
+   production, no hard-coded colors anywhere downstream).
+   ============================================================ */
+
+:root,
+:root[data-theme="dark"] {
+  --bg: #090b10;
+  --bg-grad-1: #0e1320;
+  --bg-grad-2: #090b10;
+  --surface: #131822;
+  --surface-2: #1a2130;
+  --surface-hover: #1d2433;
+  --border: #232c3b;
+  --border-strong: #303b4d;
+
+  --text: #f3f6fc;
+  --text-muted: #9aa6bc;
+  --text-dim: #69748a;
+
+  --yes: #2dd4a7;
+  --yes-strong: #34e0b3;
+  --yes-soft: rgba(45, 212, 167, 0.12);
+  --no: #fb6f84;
+  --no-strong: #ff8497;
+  --no-soft: rgba(251, 111, 132, 0.12);
+  --accent: #5b8def;
+  --accent-soft: rgba(91, 141, 239, 0.14);
+
+  --ring: rgba(91, 141, 239, 0.55);
+  --shadow-card: 0 24px 60px -28px rgba(0, 0, 0, 0.85);
+  --shadow-soft: 0 6px 20px -10px rgba(0, 0, 0, 0.6);
+  --grid-line: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f8fd;
+  --bg-grad-1: #eaf0fb;
+  --bg-grad-2: #f5f8fd;
+  --surface: #ffffff;
+  --surface-2: #f1f5fc;
+  --surface-hover: #eef3fb;
+  --border: #e3e9f3;
+  --border-strong: #d2dbeb;
+
+  --text: #0b1220;
+  --text-muted: #56607a;
+  --text-dim: #8b94a8;
+
+  --yes: #07a878;
+  --yes-strong: #0bbd88;
+  --yes-soft: rgba(7, 168, 120, 0.1);
+  --no: #e23a54;
+  --no-strong: #f04861;
+  --no-soft: rgba(226, 58, 84, 0.1);
+  --accent: #2f6df0;
+  --accent-soft: rgba(47, 109, 240, 0.1);
+
+  --ring: rgba(47, 109, 240, 0.45);
+  --shadow-card: 0 22px 48px -26px rgba(24, 39, 75, 0.28);
+  --shadow-soft: 0 8px 22px -14px rgba(24, 39, 75, 0.2);
+  --grid-line: rgba(11, 18, 32, 0.05);
+}
+
+/* ---- spacing / radius / type scale (referenced via calc/use) ---- */
+:root {
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background:
+    radial-gradient(1200px 720px at 78% -8%, var(--bg-grad-1), transparent 60%),
+    radial-gradient(1000px 800px at 10% 110%, var(--accent-soft), transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+  transition: background-color 0.4s var(--ease-out), color 0.3s var(--ease-out);
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "cv01" 1;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* ---- layout ---- */
+.mp-page {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 30px 18px 56px;
+}
+
+.mp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 680px) {
+  .mp-page {
+    padding: 48px 24px 76px;
+  }
+  .mp-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Respect users who don't want motion — disable transitions/animations.
+   (Components also branch on useReducedMotion for spring-driven values.) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
